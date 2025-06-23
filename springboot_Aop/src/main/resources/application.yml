@@ -1,0 +1,10 @@
+#配置该服务的基本信息
+server:
+  address: localhost
+  port: 8080
+  servlet:
+    context-path: "/aop"
+#访问路径 http://localhost:8080/aop
+
+
+
