@@ -1,0 +1,21 @@
+#配置该服务的基本信息
+server:
+  address: localhost
+  port: 8080
+  servlet:
+    context-path: "/aopDB"
+#访问路径 http://localhost:8080/aopDB
+
+spring:
+  datasource:
+    primary:
+      #spring boot 2.6.1 之后换数据库连接池了，换成 jdbc-url,之前是 url  这点是坑
+      jdbc-url: jdbc:mysql://localhost:3306/springboot_datasource1
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    secondary:
+      jdbc-url: jdbc:mysql://localhost:3306/springboot_datasource2
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
