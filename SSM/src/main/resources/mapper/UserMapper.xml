@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    动态代理模式：规范必须遵守
+        namespace:必须是对应接口的全限类名
+        select|update|insert|delete: 四个标签 id必须对应dao接口的方法名
+-->
+<mapper namespace="com.fly.dao.UserDao">
+    <select id="findByUsername" resultType="com.fly.pojo.UserInfo">
+        select * from user where name = #{username}
+    </select>
+</mapper>

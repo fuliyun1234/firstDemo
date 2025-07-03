@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    动态代理模式：规范必须遵守
+        namespace:必须是对应接口的全限类名
+        select|update|insert|delete: 四个标签 id必须对应dao接口的方法名
+-->
+<mapper namespace="com.fly.dao.AccountDao">
+    <select id="findAll" resultType="com.fly.pojo.Account">
+        select * from account
+    </select>
+
+    <insert id="save" parameterType="com.fly.pojo.Account">
+         insert into account values(null,#{name},#{money})
+    </insert>
+
+    <select id="findById" resultType="com.fly.pojo.Account">
+        select * from account where id = #{id}
+    </select>
+
+    <update id="update">
+        update account set name = #{name},money=#{money} where id = #{id}
+    </update>
+
+    <delete id="del">
+        delete from account where id = #{id}
+    </delete>
+
+</mapper>
