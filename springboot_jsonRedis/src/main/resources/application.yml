@@ -1,0 +1,42 @@
+#配置该服务的基本信息
+server:
+  address: localhost
+  port: 8080
+  servlet:
+    context-path: "/jsonRedis"
+#访问路径 http://localhost:8080/jsonRedis
+
+spring:
+  #数据库相关配置
+  redis:
+    host: localhost
+    port: 6379
+    password: redis
+    database: 2 #数据库分区索引
+    timeout: 10000 #单位毫秒
+    jedis:
+      pool:
+        #最大连接数
+        max-active: 8
+        #最大等待等待时间(负数表示没限制)
+        max-wait: -1
+        #最小空闲
+        min-idle: 0
+        #最大空闲
+        max-idle: 8
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+#需要连接redis的地址 redis://127.0.0.1:6379
+redisson:
+  address: redis://${spring.redis.host}:${spring.redis.port}
+  password: ${spring.redis.password}
+  database: ${spring.redis.database} #数据库分区索引，上面redis配置的
+
+
+#spring boot集成mybatis的方式打印sql
+logging:
+  level:
+    com.fly.springbootWebservice.dao: DEBUG #包路径为mapper文件包路径
+
