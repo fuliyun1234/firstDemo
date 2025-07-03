@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel 上传解析 Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #result { margin-top: 20px; white-space: pre-wrap; }
+        table { border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+<h2>上传 Excel 文件</h2>
+<input type="file" id="excelFile" accept=".xlsx, .xls" />
+<button id="uploadBtn">上传并解析</button>
+<div id="result"></div>
+
+<script>
+    $(document).ready(function() {
+        $("#uploadBtn").click(function() {
+            const file = $("#excelFile")[0].files[0];
+            if (!file) {
+                alert("请选择 Excel 文件！");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: "/api/upload-excel",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    displayResult(data);
+                },
+                error: function(xhr) {
+                    $("#result").html("上传失败: " + xhr.responseText);
+                }
+            });
+        });
+
+        function displayResult(data) {
+            let html = "<h3>解析结果（共 " + data.length + " 行）</h3>";
+            html += "<table><tbody>";
+
+            data.forEach(row => {
+                html += "<tr>";
+                row.forEach(cell => {
+                    html += "<td>" + cell + "</td>";
+                });
+                html += "</tr>";
+            });
+
+            html += "</tbody></table>";
+            $("#result").html(html);
+        }
+    });
+</script>
+</body>
+</html>
