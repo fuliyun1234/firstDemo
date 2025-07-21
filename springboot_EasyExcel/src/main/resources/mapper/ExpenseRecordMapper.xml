@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.fly.test.mapper.ExpenseRecordMapper">
+
+
+    <insert id="insertBatch"  parameterType="org.fly.test.entity.ExpenseRecord">
+        INSERT INTO expense_records (date, grocery, fruit, rice, clothing, gift, zaizai, transportation)
+        VALUES
+        <trim suffixOverrides=",">
+            <foreach collection="list" item="record" separator=",">
+                (#{record.date}, #{record.grocery},
+                #{record.fruit}, #{record.rice},
+                #{record.clothing}, #{record.gift},
+                #{record.zaizai}, #{record.transportation})
+            </foreach>
+        </trim>
+    </insert>
+
+    <select id="getExpenseRecordExportList" resultType="org.fly.test.entity.ExpenseRecordExport">
+        SELECT * FROM expense_records
+    </select>
+
+    <select id="getExpenseRecordExportList2" resultType="org.fly.test.entity.ExpenseRecordExport">
+        SELECT * FROM expense_records  LIMIT #{offset}, #{pageSize}
+    </select>
+
+
+
+
+</mapper>

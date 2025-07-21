@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>消费记录上传</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            margin-top: 10px;
+            display: none;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h1>上传消费记录</h1>
+<input type="file" id="excelFile" accept=".xlsx, .xls" />
+<button id="uploadBtn">上传</button>
+<button id="exportBtn">导出</button>
+<div>
+    <a href="/excel/api/expense/export">内存占用：导出Excel</a>
+</div>
+<div>
+    <a href="/excel/api/expense/export2">高并发：导出Excel</a>
+</div>
+<div class="progress-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar">0%</div>
+</div>
+<div id="result"></div>
+
+<script>
+    $(document).ready(function() {
+        $("#uploadBtn").click(function () {
+            const file = $("#excelFile")[0].files[0];
+            if (!file) {
+                alert("请选择文件");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: "/excel/api/expense/upload",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    showResult(data);
+                },
+                error: function (xhr) {
+                    $("#result").html("错误: " + xhr.responseText);
+                }
+            });
+        });
+
+
+
+        function showResult(data) {
+            let html = `<h3>解析结果（共 ${data.length} 条）</h3><table>
+                    <tr>
+                        <th>日期</th><th>买菜</th><th>水果</th><th>买米</th>
+                        <th>衣服</th><th>随礼</th><th>惠惠</th><th>交通</th>
+                    </tr>`;
+
+            data.forEach(item => {
+                html += `<tr>
+                        <td>${formatDate(item.date)}</td>
+                        <td>${item.grocery}</td>
+                        <td>${item.fruit}</td>
+                        <td>${item.rice}</td>
+                        <td>${item.clothing}</td>
+                        <td>${item.gift}</td>
+                        <td>${item.zaizai}</td>
+                        <td>${item.transportation}</td>
+                    </tr>`;
+            });
+
+            html += "</table>";
+            $("#result").html(html);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return "";
+            const date = new Date(timestamp);
+            return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        }
+    });
+</script>
+</body>
+</html>
