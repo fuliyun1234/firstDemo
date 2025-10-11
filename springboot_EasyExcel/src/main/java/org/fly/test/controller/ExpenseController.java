@@ -145,14 +145,13 @@ public class ExpenseController {
     public void export(HttpServletResponse response) throws IOException {
         Instant start = Instant.now();
 
+        //原始导出可以看到哪导致导不出
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        // 启用分块传输编码以支持进度跟踪
-        response.setHeader("Transfer-Encoding", "chunked");
-
         List<ExpenseRecordExport> list = expenseRecordService.getExpenseRecordExportList(); // 获取数据
+
 
         EasyExcel.write(response.getOutputStream(), ExpenseRecordExport.class)
                 .sheet("测试数据")
